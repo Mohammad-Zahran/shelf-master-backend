@@ -28,24 +28,32 @@ const wishlistItemSchema = new Schema({
   },
 });
 
+// Order Schema:
+const orderItemSchema = new Schema({
+  productId: String,
+  name: String,
+  price: Number,
+  quantity: Number,
+});
+
 // User Schema:
 const userSchema = new Schema({
-    name: {
-        type: String,
-        required: true,
-        trim: true,
-        minlength: 3,
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-        trim: true
-    },
-    photoURL: String,
-    role: {
-        type: String,
-        enum: ['user', 'admin'],
-        default: 'user',
-    }
-})
+  name: {
+    type: String,
+    required: true,
+    trim: true,
+    minlength: 3,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+  },
+  photoURL: String,
+  role: {
+    type: String,
+    enum: ["user", "admin"],
+    default: "user",
+  },
+});
