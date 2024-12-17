@@ -16,7 +16,7 @@ const cartItemSchema = new Schema({
   quantity: Number,
 });
 
-// Wishlist Item Schema
+// Wishlist Item Schema:
 const wishlistItemSchema = new Schema({
   productId: String,
   name: String,
@@ -27,3 +27,25 @@ const wishlistItemSchema = new Schema({
     default: Date.now,
   },
 });
+
+// User Schema:
+const userSchema = new Schema({
+    name: {
+        type: String,
+        required: true,
+        trim: true,
+        minlength: 3,
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true
+    },
+    photoURL: String,
+    role: {
+        type: String,
+        enum: ['user', 'admin'],
+        default: 'user',
+    }
+})
