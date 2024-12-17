@@ -1,3 +1,6 @@
+import mongoose from "mongoose";
+import { Schema } from "mongoose";
+
 const reviewSchema = new Schema({
   userId: String,
   userName: String,
