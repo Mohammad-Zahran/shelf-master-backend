@@ -12,7 +12,7 @@ export const postProductItem = async (req, res) => {
 };
 
 // get all productItems
-export const getAllMenuItems = async (req, res) => {
+export const getAllProducItems = async (req, res) => {
   try {
     const products = await Product.find({}).sort({ createdAt: -1 });
     res.status(200).json(products);
