@@ -3,6 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import userRoutes from "./routes/user.routes.js"
+import jwt from "jsonwebtoken";
+
 const app = express();
 
 dotenv.config();
@@ -25,6 +27,14 @@ mongoose
 
   app.get('/', (req, res) => {
     res.send('Hello Foodi Client Server!')
+  })
+
+  app.post('/jwt', async(req,res) => {
+    const user = req.body;
+    const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+      expiresIn: '1hr'
+    });
+    res.send({token})
   })
 
 app.listen(process.env.SERVER_PORT, () => {
