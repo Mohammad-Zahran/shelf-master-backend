@@ -1,5 +1,4 @@
-import mongoose from "mongoose";
-import { Schema } from "mongoose";
+import {Schema, model} from "mongoose";
 
 const reviewSchema = new Schema({
   userId: String,
@@ -37,7 +36,7 @@ const productSchema = new Schema({
     depth: Number,
   },
   material: String,
-  loadCapacity: Number, // in kg
+  loadCapacity: Number,
   price: {
     type: Number,
     required: true,
@@ -53,5 +52,4 @@ const productSchema = new Schema({
   },
 });
 
-const Product = mongoose.model("Product", productSchema);
-module.exports = Product;
+export const Product = model("Product", productSchema);
