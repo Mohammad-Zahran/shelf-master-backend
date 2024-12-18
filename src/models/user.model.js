@@ -1,6 +1,5 @@
 // User Model:
-import mongoose from "mongoose";
-import { Schema } from "mongoose";
+import {Schema, model} from "mongoose";
 
 // Cart Item Schema:
 const cartItemSchema = new Schema({
@@ -61,5 +60,4 @@ const userSchema = new Schema({
   orders: [orderItemSchema]
 });
 
-const User = mongoose.model('User', userSchema);
-module.exports = User;
+export const User = model("User", userSchema);

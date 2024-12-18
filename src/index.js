@@ -16,7 +16,7 @@ app.use(
 
 mongoose
   .connect(
-    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@shelf-master-cluster.kfdar.mongodb.net/?retryWrites=true&w=majority&appName=shelf-master-cluster"`
+    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@shelf-master-cluster.kfdar.mongodb.net/shelf-master?retryWrites=true&w=majority&appName=shelf-master-cluster"`
   )
   .then(console.log("MongoDB connected Succesfully!"))
   .catch((error) => console.log("Error connecting to MongoDB", error));
