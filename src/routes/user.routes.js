@@ -6,6 +6,7 @@ import {
   register,
   getAllUsers,
   deleteUser,
+  getAdmin,
 } from "../controllers/user.controller.js";
 
 const router = new Router();
@@ -13,5 +14,6 @@ const router = new Router();
 router.post("/", register);
 router.get("/", verifyToken, verifyAdmin, getAllUsers);
 router.delete("/:id", verifyToken, verifyAdmin, deleteUser);
+router.get('/admin/:email', verifyToken, getAdmin);
 
 export default router;

@@ -41,7 +41,6 @@ export const deleteUser = async (req, res) => {
 };
 
 // get admin
-// get admin
 export const getAdmin = async (req, res) => {
   const email = req.params.email;
   const query = { email: email };
