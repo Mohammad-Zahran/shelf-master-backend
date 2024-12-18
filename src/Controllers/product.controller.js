@@ -35,3 +35,14 @@ export const deleteProductItem = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// get single product item
+export const singleProductItem = async (req, res) => {
+  const productId = req.params.id;
+  try {
+    const product = await Product.findById(productId);
+    res.status(200).json(menu);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
