@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import userRoutes from "./routes/user.routes.js"
+import productRoutes from "./routes/product.routes.js"
 import jwt from "jsonwebtoken";
 
 const app = express();
@@ -24,6 +25,7 @@ mongoose
   .catch((error) => console.log("Error connecting to MongoDB", error));
 
   app.use('/users', userRoutes);
+  app.use('/products', productRoutes);
 
   app.get('/', (req, res) => {
     res.send('Hello Foodi Client Server!')
