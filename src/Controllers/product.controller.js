@@ -41,8 +41,50 @@ export const singleProductItem = async (req, res) => {
   const productId = req.params.id;
   try {
     const product = await Product.findById(productId);
-    res.status(200).json(menu);
+    res.status(200).json(product);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+};
+
+// Update single product item
+export const updateProductItem = async (req, res) => {
+    const productId = req.params.id; 
+    const { 
+        name, 
+        description, 
+        image, 
+        category, 
+        dimensions, 
+        material, 
+        loadCapacity, 
+        price, 
+        stock 
+    } = req.body;
+
+    try {
+        const updatedProduct = await Product.findByIdAndUpdate(
+            productId, // The ID of the product to update
+            { 
+                name, 
+                description, 
+                image, 
+                category, 
+                dimensions, 
+                material, 
+                loadCapacity, 
+                price, 
+                stock 
+            },
+            { new: true, runValidators: true } 
+        );
+
+        if (!updatedProduct) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+
+        res.status(200).json(updatedProduct); // Respond with the updated product
+    } catch (error) {
+        res.status(500).json({ message: error.message }); // Handle errors
+    }
 };
