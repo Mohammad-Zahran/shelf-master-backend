@@ -28,3 +28,21 @@ export const addReview = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const getReviews = async (req, res) => {
+  try {
+    const {productId} = req.params;
+
+    const product = await Product.findById(productId);
+
+    if(!product){
+      return res.status(404).json({message: "Product not found!"});
+    }
+
+    res.status(200).json({reviews: product.reviews});
+  }
+  catch (error) {
+    res.status(500).json({message: error.message});
+  } 
+}
+
