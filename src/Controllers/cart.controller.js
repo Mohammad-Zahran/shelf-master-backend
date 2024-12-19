@@ -64,13 +64,14 @@ export const deleteCart = async (req, res) => {
   }
 };
 
+// update Cart
 export const updateCart = async (req, res) => {
-  const { id: cartId } = req.params; 
-  const { email, productId, name, images, price, quantity } = req.body; 
+  const { id: cartId } = req.params;
+  const { email, productId, name, images, price, quantity } = req.body;
 
   try {
     const user = await User.findOneAndUpdate(
-      { email, "cart._id": cartId }, 
+      { email, "cart._id": cartId },
       {
         $set: {
           "cart.$.productId": productId,
@@ -80,7 +81,7 @@ export const updateCart = async (req, res) => {
           "cart.$.quantity": quantity,
         },
       },
-      { new: true, runValidators: true } 
+      { new: true, runValidators: true }
     );
 
     if (!user) {
@@ -91,6 +92,27 @@ export const updateCart = async (req, res) => {
       message: "Cart item updated successfully!",
       cart: user.cart,
     });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Get Single Cart Item
+export const getSingleCart = async (req, res) => {
+  const { email } = req.body;
+  const { id: cartId } = req.params;
+
+  try {
+    const user = await User.findOne(
+      { email, "cart._id": cartId },
+      { "cart.$": 1 }
+    );
+
+    if (!user || !user.cart || user.cart.length === 0) {
+      return res.status(404).json({ message: "Cart item not found!" });
+    }
+
+    res.status(200).json({ cart: user.cart[0] });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
