@@ -1,4 +1,3 @@
-import { FaCartShopping } from "react-icons/fa6";
 import { User } from "../models/user.model.js";
 
 // Add to Cart
@@ -32,15 +31,33 @@ export const addToCart = async (req, res) => {
   }
 };
 
-// Delete Cart
+// Delete Cart Item by cartId
 export const deleteCart = async (req, res) => {
-  const cartId = req.params.id;
+  const { email } = req.body;
+  const { id: cartId } = req.params;
+
   try {
-    const deletedCart = await User.findByIdAndDelete(cartId);
-    if (!deletedCart) {
-      return res.status(401).json({ message: "Cart Items not found!" });
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found!" });
     }
-    res.status(200).json({ message: "Cart Item deleted Succesfully!" });
+
+    const cartIndex = user.cart.findIndex(
+      (item) => item._id.toString() === cartId
+    );
+
+    if (cartIndex === -1) {
+      return res.status(404).json({ message: "Cart item not found!" });
+    }
+
+    user.cart.splice(cartIndex, 1);
+
+    await user.save();
+
+    res
+      .status(200)
+      .json({ message: "Cart item deleted successfully!", cart: user.cart });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
