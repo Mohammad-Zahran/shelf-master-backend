@@ -1,5 +1,18 @@
-import { FaCartShopping } from "react-icons/fa6";
 import { User } from "../models/user.model.js";
+
+// get carts using email
+export const getCartByEmail = async(req,res) => {
+  try {
+    const email = req.query.email;
+
+    const query = {email: email};
+    const result = await User.find(query).exec();
+    res.status(200).json(result);
+  }
+  catch (error) {
+    res.status(500).json({message: error.message});
+  }
+}
 
 // Add to Cart
 export const addToCart = async (req, res) => {
