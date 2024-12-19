@@ -6,6 +6,7 @@ import userRoutes from "./routes/user.routes.js"
 import productRoutes from "./routes/product.routes.js"
 import cartRoutes from "./routes/cart.routes.js";
 import reviewRoutes from "./routes/review.routes.js";
+import categoryRoutes from "./routes/category.routes.js";
 import jwt from "jsonwebtoken";
 
 const app = express();
@@ -29,7 +30,8 @@ mongoose
   app.use('/users', userRoutes);
   app.use('/products', productRoutes);
   app.use('/carts', cartRoutes);
-  app.use('/reviews',reviewRoutes)
+  app.use('/reviews',reviewRoutes);
+  app.use('/category',categoryRoutes);
 
   app.get('/', (req, res) => {
     res.send('Hello Foodi Client Server!')

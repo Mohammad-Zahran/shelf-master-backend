@@ -1,5 +1,4 @@
-import mongoose from "mongoose";
-import { Schema } from "mongoose";
+import { Schema, model } from "mongoose";
 
 const categorySchema = new Schema({
   name: {
@@ -15,5 +14,4 @@ const categorySchema = new Schema({
   },
 });
 
-const Category = mongoose.model("Category", categorySchema);
-module.exports = Category;
+export const Category = model("Category", categorySchema);
