@@ -29,23 +29,48 @@ export const addReview = async (req, res) => {
   }
 };
 
-// getReviews
+// Get All Reviews
 export const getReviews = async (req, res) => {
   try {
-    const {id: productId} = req.params;
+    const { id: productId } = req.params;
 
     const product = await Product.findById(productId);
 
-    if(!product){
-      return res.status(404).json({message: "Product not found!"});
+    if (!product) {
+      return res.status(404).json({ message: "Product not found!" });
     }
 
-    res.status(200).json({reviews: product.reviews});
+    res.status(200).json({ reviews: product.reviews });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-  catch (error) {
-    res.status(500).json({message: error.message});
-  } 
-}
+};
 
-//
+// update Reviews
+export const updateReview = async (req, res) => {
+  try {
+    const { productId, reviewId } = req.params;
+    const { rating, comment } = req.body;
 
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found!" });
+    }
+
+    const review = product.reviews.id(reviewId);
+
+    if (!review) {
+      return res.status(404).json({ message: "Review not found!" });
+    }
+
+    if (rating) review.rating = rating;
+    if (comment) review.comment = comment;
+
+    await product.save();
+
+    res.status(200).json({ message: "Review updated successfully!", review });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
