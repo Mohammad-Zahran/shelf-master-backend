@@ -74,3 +74,30 @@ export const updateReview = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+//Delete Review
+export const deleteReview = async (req, res) => {
+  try {
+    const { productId, reviewId } = req.params;
+
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found!" });
+    }
+
+    const review = product.reviews.id(reviewId);
+
+    if (!review) {
+      return res.status(404).json({ message: "Review not found!" });
+    }
+
+    review.remove();
+
+    await product.save();
+
+    res.status(200).json({ message: "Review deleted successfully!" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
