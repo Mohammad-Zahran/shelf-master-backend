@@ -86,13 +86,10 @@ export const deleteReview = async (req, res) => {
       return res.status(404).json({ message: "Product not found!" });
     }
 
-    const review = product.reviews.id(reviewId);
-
-    if (!review) {
-      return res.status(404).json({ message: "Review not found!" });
-    }
-
-    review.remove();
+    // Filter out the review with the given reviewId
+    product.reviews = product.reviews.filter(
+      (review) => review._id.toString() !== reviewId
+    );
 
     await product.save();
 
