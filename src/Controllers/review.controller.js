@@ -46,6 +46,29 @@ export const getReviews = async (req, res) => {
   }
 };
 
+// get a specific review
+export const getReview = async (req, res) => {
+  try {
+    const { productId, reviewId } = req.params;
+
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found!" });
+    }
+
+    const review = product.reviews.id(reviewId);
+
+    if (!review) {
+      return res.status(404).json({ message: "Review not found!" });
+    }
+
+    res.status(200).json({ review });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // update Reviews
 export const updateReview = async (req, res) => {
   try {
@@ -102,7 +125,7 @@ export const deleteReview = async (req, res) => {
 
 export const getAverageRating = async (req, res) => {
   try {
-    const { id:productId } = req.params;
+    const { id: productId } = req.params;
 
     const product = await Product.findById(productId);
 
@@ -116,7 +139,10 @@ export const getAverageRating = async (req, res) => {
       return res.status(200).json({ averageRating: 0 });
     }
 
-    const totalRating = product.reviews.reduce((sum, review) => sum + review.rating, 0);
+    const totalRating = product.reviews.reduce(
+      (sum, review) => sum + review.rating,
+      0
+    );
     const averageRating = totalRating / totalReviews;
 
     res.status(200).json({ averageRating });
