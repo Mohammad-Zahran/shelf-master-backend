@@ -25,10 +25,10 @@ const productSchema = new Schema({
   },
   description: String,
   images: {
-    type: [String], 
+    type: [String],
     validate: {
       validator: function (v) {
-        return v.length > 0; 
+        return v.length > 0;
       },
       message: "A product must have at least one image.",
     },
