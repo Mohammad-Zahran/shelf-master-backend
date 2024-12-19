@@ -65,22 +65,32 @@ export const deleteCart = async (req, res) => {
 };
 
 export const updateCart = async (req, res) => {
-  const { id: cartId } = req.params;
-  const { email, productId, name, images, price, quantity } = req.body;
+  const { id: cartId } = req.params; 
+  const { email, productId, name, images, price, quantity } = req.body; 
 
   try {
-    const updatedCart = await User.findByIdAndUpdate(
-      cartId,
-      { email, productId, name, images, price, quantity },
+    const user = await User.findOneAndUpdate(
+      { email, "cart._id": cartId }, 
       {
-        new: true,
-        runValidators: true,
-      }
+        $set: {
+          "cart.$.productId": productId,
+          "cart.$.name": name,
+          "cart.$.images": images,
+          "cart.$.price": price,
+          "cart.$.quantity": quantity,
+        },
+      },
+      { new: true, runValidators: true } 
     );
-    if (!updatedCart) {
-      return res.status(401).json({ message: "Cart Item not found!" });
+
+    if (!user) {
+      return res.status(404).json({ message: "Cart item not found!" });
     }
-    res.status(200).json({ updatedCart });
+
+    res.status(200).json({
+      message: "Cart item updated successfully!",
+      cart: user.cart,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
