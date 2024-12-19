@@ -9,12 +9,11 @@ const cartItemSchema = new Schema({
     required: true,
     minlength: 3,
   },
-  images: [String], // Assuming an array of image URLs
+  images: [String], 
   price: Number,
   quantity: Number,
 });
 
-// Add a virtual field for the first image
 cartItemSchema.virtual("firstImage").get(function () {
   return this.images && this.images.length > 0 ? this.images[0] : null;
 });
