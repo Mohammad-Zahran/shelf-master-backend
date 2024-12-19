@@ -1,5 +1,4 @@
-// User Model:
-import {Schema, model} from "mongoose";
+import { Schema, model } from "mongoose";
 
 // Cart Item Schema:
 const cartItemSchema = new Schema({
@@ -10,9 +9,14 @@ const cartItemSchema = new Schema({
     required: true,
     minlength: 3,
   },
-  image: String,
+  images: [String], // Assuming an array of image URLs
   price: Number,
   quantity: Number,
+});
+
+// Add a virtual field for the first image
+cartItemSchema.virtual("firstImage").get(function () {
+  return this.images && this.images.length > 0 ? this.images[0] : null;
 });
 
 // Wishlist Item Schema:

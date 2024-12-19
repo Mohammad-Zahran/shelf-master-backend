@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import userRoutes from "./routes/user.routes.js"
 import productRoutes from "./routes/product.routes.js"
+import cartRoutes from "./routes/cart.routes.js";
 import jwt from "jsonwebtoken";
 
 const app = express();
@@ -26,6 +27,7 @@ mongoose
 
   app.use('/users', userRoutes);
   app.use('/products', productRoutes);
+  app.use('/carts', cartRoutes);
 
   app.get('/', (req, res) => {
     res.send('Hello Foodi Client Server!')

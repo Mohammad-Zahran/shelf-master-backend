@@ -53,7 +53,7 @@ export const updateProductItem = async (req, res) => {
     const { 
         name, 
         description, 
-        image, 
+        images, 
         category, 
         dimensions, 
         material, 
@@ -68,7 +68,7 @@ export const updateProductItem = async (req, res) => {
             { 
                 name, 
                 description, 
-                image, 
+                images, 
                 category, 
                 dimensions, 
                 material, 
