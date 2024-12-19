@@ -29,9 +29,10 @@ export const addReview = async (req, res) => {
   }
 };
 
+// getReviews
 export const getReviews = async (req, res) => {
   try {
-    const {productId} = req.params;
+    const {id: productId} = req.params;
 
     const product = await Product.findById(productId);
 
@@ -45,4 +46,6 @@ export const getReviews = async (req, res) => {
     res.status(500).json({message: error.message});
   } 
 }
+
+//
 
