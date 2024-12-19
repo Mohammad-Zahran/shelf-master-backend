@@ -86,7 +86,6 @@ export const deleteReview = async (req, res) => {
       return res.status(404).json({ message: "Product not found!" });
     }
 
-    // Filter out the review with the given reviewId
     product.reviews = product.reviews.filter(
       (review) => review._id.toString() !== reviewId
     );
@@ -94,6 +93,33 @@ export const deleteReview = async (req, res) => {
     await product.save();
 
     res.status(200).json({ message: "Review deleted successfully!" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// get Average Rating of a Product
+
+export const getAverageRating = async (req, res) => {
+  try {
+    const { productId } = req.params;
+
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found!" });
+    }
+
+    const totalReviews = product.reviews.length;
+
+    if (totalReviews === 0) {
+      return res.status(200).json({ averageRating: 0 });
+    }
+
+    const totalRating = product.reviews.reduce((sum, review) => sum + review.rating, 0);
+    const averageRating = totalRating / totalReviews;
+
+    res.status(200).json({ averageRating });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
