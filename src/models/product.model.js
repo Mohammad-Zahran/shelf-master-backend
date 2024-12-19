@@ -1,4 +1,4 @@
-import {Schema, model} from "mongoose";
+import { Schema, model } from "mongoose";
 
 const reviewSchema = new Schema({
   userId: String,
@@ -24,7 +24,15 @@ const productSchema = new Schema({
     minlength: 3,
   },
   description: String,
-  image: String,
+  images: {
+    type: [String], 
+    validate: {
+      validator: function (v) {
+        return v.length > 0; 
+      },
+      message: "A product must have at least one image.",
+    },
+  },
   category: {
     type: String,
     enum: ["Heavy-Duty", "Adjustable", "Wall-Mounted", "Freestanding"],
