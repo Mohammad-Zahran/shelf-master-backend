@@ -102,7 +102,7 @@ export const deleteReview = async (req, res) => {
 
 export const getAverageRating = async (req, res) => {
   try {
-    const { productId } = req.params;
+    const { id:productId } = req.params;
 
     const product = await Product.findById(productId);
 
