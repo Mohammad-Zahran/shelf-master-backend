@@ -6,6 +6,7 @@ import {
   getUserPayments,
   getAllPayments,
   confirmPayment,
+  deletePayment,
 } from "../controllers/payment.controller.js";
 
 const router = new Router();
@@ -14,5 +15,6 @@ router.post("/", createPayment);
 router.get("/", verifyToken, getUserPayments);
 router.get("/all", getAllPayments);
 router.patch("/:id", confirmPayment);
+router.delete("/:id", deletePayment);
 
 export default router;

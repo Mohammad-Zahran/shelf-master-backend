@@ -75,3 +75,17 @@ export const confirmPayment = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// deletePayment
+export const deletePayment = async (req, res) => {
+  const payId = req.params.id;
+  try {
+    const deletedPayment = await Payment.findByIdAndDelete(payId);
+    if (!deletedPayment) {
+      return res.status(404).json({ message: "Payment not found" });
+    }
+    res.status(200).json({ message: "Payment deleted successfully" });
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
