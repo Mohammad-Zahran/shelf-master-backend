@@ -30,7 +30,7 @@ const wishlistItemSchema = new Schema({
   },
 });
 
-// Testimonial Item Schema:
+// Testimonial Item Schema
 const testimonialSchema = new Schema({
   name: {
     type: String,
