@@ -30,6 +30,32 @@ const wishlistItemSchema = new Schema({
   },
 });
 
+// Testimonial Item Schema:
+const testimonialSchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true
+  },
+  rating: {
+    type: Number,
+    required: true,
+    min: 1,
+    max: 5
+  },
+  comment: {
+    type: String,
+    required: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+});
+
 // Order Schema:
 const orderItemSchema = new Schema({
   productId: String,
@@ -60,7 +86,8 @@ const userSchema = new Schema({
   },
   cart: [cartItemSchema],
   wishlist: [wishlistItemSchema],
-  orders: [orderItemSchema]
+  orders: [orderItemSchema],
+  testimonials: [testimonialSchema],
 });
 
 export const User = model("User", userSchema);

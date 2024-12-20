@@ -1,4 +1,5 @@
 import { Product } from "../models/product.model.js";
+import { Category } from "../models/category.model.js";
 
 // post a new product item
 export const postProductItem = async (req, res) => {
@@ -88,3 +89,38 @@ export const updateProductItem = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+// Updated assignCategoryToProduct function
+export const assignCategoryToProduct = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const { categoryId } = req.body;
+
+    const product = await Product.findById(productId);
+    const category = await Category.findById(categoryId);
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found!" });
+    }
+
+    if (!category) {
+      return res.status(404).json({ message: "Category not found!" });
+    }
+
+    // Check if the category ID is valid according to the enum
+    if (!["Heavy-Duty", "Adjustable", "Wall-Mounted", "Freestanding"].includes(category.name)) {
+      return res.status(400).json({ message: "Invalid category type!" });
+    }
+
+    product.category = categoryId;
+    await product.save();
+
+    res
+      .status(200)
+      .json({ message: "Category assigned to product successfully!", product });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
