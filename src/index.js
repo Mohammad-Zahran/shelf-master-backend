@@ -7,7 +7,7 @@ import productRoutes from "./routes/product.routes.js"
 import cartRoutes from "./routes/cart.routes.js";
 import reviewRoutes from "./routes/review.routes.js";
 import categoryRoutes from "./routes/category.routes.js";
-import paymentRoutes from "./routes/product.routes.js";
+import paymentRoutes from "./routes/payment.routes.js";
 import jwt from "jsonwebtoken";
 
 const app = express();
