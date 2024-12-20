@@ -32,6 +32,7 @@ export const getAllTestimonials = async (req, res) => {
   }
 };
 
+
 // Update a testimonial
 export const updateTestimonial = async (req, res) => {
   const { email, testimonialId } = req.params;
@@ -54,6 +55,33 @@ export const updateTestimonial = async (req, res) => {
     await user.save();
 
     res.status(200).json({ message: "Testimonial updated successfully", user });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const deleteTestimonial = async (req, res) => {
+  const { email, testimonialId } = req.params;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const testimonialIndex = user.testimonials.findIndex(
+      (testimonial) => testimonial._id.toString() === testimonialId
+    );
+
+    if (testimonialIndex === -1) {
+      return res.status(404).json({ message: "Testimonial not found" });
+    }
+
+    user.testimonials.splice(testimonialIndex, 1);
+    await user.save();
+
+    res.status(200).json({ message: "Testimonial deleted successfully", user });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
