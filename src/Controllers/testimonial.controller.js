@@ -32,6 +32,22 @@ export const getAllTestimonials = async (req, res) => {
   }
 };
 
+// Get all testimonials for a user
+export const getTestimonials = async (req, res) => {
+  const email = req.query.email;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(user.testimonials);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 // Update a testimonial
 export const updateTestimonial = async (req, res) => {
