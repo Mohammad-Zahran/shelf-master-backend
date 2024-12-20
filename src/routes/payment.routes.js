@@ -5,6 +5,7 @@ import {
   createPayment,
   getUserPayments,
   getAllPayments,
+  confirmPayment,
 } from "../controllers/payment.controller.js";
 
 const router = new Router();
@@ -12,5 +13,6 @@ const router = new Router();
 router.post("/", createPayment);
 router.get("/", verifyToken, getUserPayments);
 router.get("/all", getAllPayments);
+router.patch("/:id", confirmPayment);
 
 export default router;

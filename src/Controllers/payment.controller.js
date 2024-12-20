@@ -54,3 +54,24 @@ export const getAllPayments = async (req, res) => {
     res.status(404).json({ message: error.message });
   }
 };
+
+// confirm payments status
+export const confirmPayment = async (req, res) => {
+  const payId = req.params.id;
+  const { status } = req.body;
+  try {
+    const updatedStatus = await Payment.findByIdAndUpdate(
+      payId,
+      { status: "confirmed" },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedStatus) {
+      return res.status(404).json({ message: "Payment not found" });
+    }
+
+    res.status(200).json(updatedStatus);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
