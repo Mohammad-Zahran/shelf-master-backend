@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { verifyToken } from "../middleware/verifyToken.js";
 import {
   addWishlistItem,
   getWishListByEmail,
@@ -8,7 +9,7 @@ import {
 const router = new Router();
 
 router.post("/", addWishlistItem);
-router.get("/", getWishListByEmail);
+router.get("/", verifyToken, getWishListByEmail);
 router.delete('/:id', removeWishlistItem);
 
 export default router;

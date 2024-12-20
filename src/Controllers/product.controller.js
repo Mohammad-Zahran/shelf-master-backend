@@ -90,7 +90,6 @@ export const updateProductItem = async (req, res) => {
   }
 };
 
-
 // Updated assignCategoryToProduct function
 export const assignCategoryToProduct = async (req, res) => {
   try {
@@ -109,7 +108,11 @@ export const assignCategoryToProduct = async (req, res) => {
     }
 
     // Check if the category ID is valid according to the enum
-    if (!["Heavy-Duty", "Adjustable", "Wall-Mounted", "Freestanding"].includes(category.name)) {
+    if (
+      !["Heavy-Duty", "Adjustable", "Wall-Mounted", "Freestanding"].includes(
+        category.name
+      )
+    ) {
       return res.status(400).json({ message: "Invalid category type!" });
     }
 
@@ -123,4 +126,3 @@ export const assignCategoryToProduct = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-

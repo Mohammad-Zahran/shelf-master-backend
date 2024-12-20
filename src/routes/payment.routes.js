@@ -11,7 +11,7 @@ import {
 
 const router = new Router();
 
-router.post("/", createPayment);
+router.post("/", verifyToken, createPayment);
 router.get("/", verifyToken, getUserPayments);
 router.get("/all", getAllPayments);
 router.patch("/:id", confirmPayment);
