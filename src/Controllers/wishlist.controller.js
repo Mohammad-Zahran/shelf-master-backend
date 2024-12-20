@@ -21,21 +21,18 @@ export const addWishlistItem = async (req, res) => {
 };
 
 // Get all wishlist items
-export const getWishListItems = async (req, res) => {
-  const email = req.query.email;
-
-  try {
-    const user = await User.findOne({ email });
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+export const getWishListByEmail = async(req,res) => {
+    try {
+      const email = req.query.email;
+  
+      const query = {email: email};
+      const result = await User.find(query).exec();
+      res.status(200).json(result);
     }
-
-    res.status(200).json(user.wishlist);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    catch (error) {
+      res.status(500).json({message: error.message});
+    }
   }
-};
 
 // Remove an item from the wishlist based on productId and wishlistId
 export const removeWishlistItem = async (req, res) => {
