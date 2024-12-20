@@ -19,3 +19,15 @@ export const addTestimonial = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// Get all testimonials across all users
+export const getAllTestimonials = async (req, res) => {
+  try {
+    const users = await User.find({}, "testimonials");
+    const allTestimonials = users.map((user) => user.testimonials).flat();
+
+    res.status(200).json(allTestimonials);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
