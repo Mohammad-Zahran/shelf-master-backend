@@ -13,6 +13,8 @@ import testimonialRoutes from "./routes/testimonial.routes.js";
 
 import jwt from "jsonwebtoken";
 
+import nodemailer from "nodemailer";
+
 const app = express();
 
 dotenv.config();
@@ -38,10 +40,10 @@ app.use("/reviews", reviewRoutes);
 app.use("/category", categoryRoutes);
 app.use("/payments", paymentRoutes);
 app.use("/wishlists", wishlistRoutes);
-app.use("/testimonials",testimonialRoutes);
+app.use("/testimonials", testimonialRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Hello Foodi Client Server!");
+  res.send("Hello Shelf Client Server!");
 });
 
 app.post("/jwt", async (req, res) => {
@@ -55,3 +57,31 @@ app.post("/jwt", async (req, res) => {
 app.listen(process.env.SERVER_PORT, () => {
   console.log(`Server running on port ${process.env.SERVER_PORT}`);
 });
+
+// const transporter = nodemailer.createTransport({
+//   host: "smtp.gmail.com",
+//   port: 587, // Use 465 if you set `secure: true`
+//   secure: false, // true for port 465, false for port 587
+//   auth: {
+//     user: process.env.EMAIL_USER,
+//     pass: process.env.EMAIL_PASS,
+//   },
+// });
+
+
+// 
+// async function main() {
+//   // send mail with defined transport object
+//   const info = await transporter.sendMail({
+//     from: '"Maddison Foo Koch 👻" <zahranmohammad30@gmail.com>', // sender address
+//     to: "mohammadalzahrann@gmail.com", // list of receivers
+//     subject: "Hello ✔", // Subject line
+//     text: "Hello world?", // plain text body
+//     html: "<b>Hello world?</b>", // html body
+//   });
+
+//   console.log("Message sent: %s", info.messageId);
+//   // Message sent: <d786aa62-4e0a-070a-47ed-0b0666549519@ethereal.email>
+// }
+
+// main().catch(console.error);
