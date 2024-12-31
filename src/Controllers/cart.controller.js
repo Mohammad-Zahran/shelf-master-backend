@@ -89,27 +89,30 @@ export const addToCart = async (req, res) => {
 //   }
 // };
 
-// Delete Cart Item by cartId
 export const deleteCart = async (req, res) => {
-  const { id: cartId } = req.params; // Get cart ID from request parameters
+  const { id: cartId } = req.params;
 
   try {
-    // Find the user containing the cart item by cartId
     const user = await User.findOne({ "cart._id": cartId });
 
     if (!user) {
       return res.status(404).json({ message: "Cart item not found!" });
     }
 
-    // Filter the cart to exclude the item with the given cartId
+    // Filter out the cart item
+    const originalCartLength = user.cart.length;
     user.cart = user.cart.filter((item) => item._id.toString() !== cartId);
 
-    // Save the updated user document
+    // If no items were removed, return an error
+    if (originalCartLength === user.cart.length) {
+      return res.status(404).json({ message: "Cart item not found!" });
+    }
+
     await user.save();
 
-    res.status(200).json({ message: "Cart item deleted successfully!" });
+    res.status(200).json({ success: true, message: "Cart item deleted successfully!" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
