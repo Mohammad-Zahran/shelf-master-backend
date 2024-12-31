@@ -57,37 +57,62 @@ export const addToCart = async (req, res) => {
   }
 };
 
+// // Delete Cart Item by cartId
+// export const deleteCart = async (req, res) => {
+//   const { email } = req.body;
+//   const { id: cartId } = req.params;
+
+//   try {
+//     const user = await User.findOne({ email });
+
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found!" });
+//     }
+
+//     const cartIndex = user.cart.findIndex(
+//       (item) => item._id.toString() === cartId
+//     );
+
+//     if (cartIndex === -1) {
+//       return res.status(404).json({ message: "Cart item not found!" });
+//     }
+
+//     user.cart.splice(cartIndex, 1);
+
+//     await user.save();
+
+//     res
+//       .status(200)
+//       .json({ message: "Cart item deleted successfully!", cart: user.cart });
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
 // Delete Cart Item by cartId
 export const deleteCart = async (req, res) => {
-  const { email } = req.body;
-  const { id: cartId } = req.params;
+  const { id: cartId } = req.params; // Get cart ID from request parameters
 
   try {
-    const user = await User.findOne({ email });
+    // Find the user containing the cart item by cartId
+    const user = await User.findOne({ "cart._id": cartId });
 
     if (!user) {
-      return res.status(404).json({ message: "User not found!" });
-    }
-
-    const cartIndex = user.cart.findIndex(
-      (item) => item._id.toString() === cartId
-    );
-
-    if (cartIndex === -1) {
       return res.status(404).json({ message: "Cart item not found!" });
     }
 
-    user.cart.splice(cartIndex, 1);
+    // Filter the cart to exclude the item with the given cartId
+    user.cart = user.cart.filter((item) => item._id.toString() !== cartId);
 
+    // Save the updated user document
     await user.save();
 
-    res
-      .status(200)
-      .json({ message: "Cart item deleted successfully!", cart: user.cart });
+    res.status(200).json({ message: "Cart item deleted successfully!" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 // update Cart
 export const updateCart = async (req, res) => {
@@ -143,15 +168,14 @@ export const updateCart = async (req, res) => {
 //   }
 // };
 
-// Get Single Cart Item
 export const getSingleCart = async (req, res) => {
-  const { email } = req.body;
   const { id: cartId } = req.params;
 
   try {
+    // Find the user containing the cart item with the given ID
     const user = await User.findOne(
-      { email, "cart._id": cartId },
-      { "cart.$": 1 }
+      { "cart._id": cartId },
+      { "cart.$": 1 } // Only retrieve the matching cart item
     );
 
     if (!user || !user.cart || user.cart.length === 0) {
