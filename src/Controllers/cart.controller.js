@@ -122,6 +122,27 @@ export const updateCart = async (req, res) => {
   }
 };
 
+// // Get Single Cart Item
+// export const getSingleCart = async (req, res) => {
+//   const { email } = req.body;
+//   const { id: cartId } = req.params;
+
+//   try {
+//     const user = await User.findOne(
+//       { email, "cart._id": cartId },
+//       { "cart.$": 1 }
+//     );
+
+//     if (!user || !user.cart || user.cart.length === 0) {
+//       return res.status(404).json({ message: "Cart item not found!" });
+//     }
+
+//     res.status(200).json({ cart: user.cart[0] });
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
 // Get Single Cart Item
 export const getSingleCart = async (req, res) => {
   const { email } = req.body;
@@ -142,3 +163,4 @@ export const getSingleCart = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
