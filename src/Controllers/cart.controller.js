@@ -1,45 +1,51 @@
 import { User } from "../models/user.model.js";
 
 // get carts using email
-export const getCartByEmail = async(req,res) => {
+export const getCartByEmail = async (req, res) => {
   try {
     const email = req.query.email;
 
-    const query = {email: email};
+    const query = { email: email };
     const result = await User.find(query).exec();
     res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-  catch (error) {
-    res.status(500).json({message: error.message});
-  }
-}
+};
 
 // Add to Cart
 export const addToCart = async (req, res) => {
   const { email, productId, name, images, price, quantity } = req.body;
 
   try {
+    // Find the user by email
     const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(404).json({ message: "User not found!" });
     }
 
+    // Check if the product already exists in the user's cart
     const existingCartItem = user.cart.find(
       (item) => item.productId === productId
     );
 
     if (existingCartItem) {
-      existingCartItem.quantity += quantity;
-    } else {
-      user.cart.push({ productId, name, images, price, quantity });
+      return res
+        .status(400)
+        .json({ message: "Product already exists in the cart!" });
     }
 
+    // Add the new product to the cart
+    user.cart.push({ productId, name, images, price, quantity });
+
+    // Save the updated user document
     await user.save();
 
-    res
-      .status(200)
-      .json({ message: "Item added to cart successfully!", cart: user.cart });
+    res.status(201).json({
+      message: "Item added to cart successfully!",
+      cart: user.cart,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
