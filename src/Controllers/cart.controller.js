@@ -18,10 +18,10 @@ export const getCartByEmail = async (req, res) => {
   }
 };
 
-
 // Add to Cart
 export const addToCart = async (req, res) => {
-  const { email, productId, name, images, material, price, quantity } = req.body;
+  const { email, productId, name, images, material, price, quantity } =
+    req.body;
 
   try {
     // Find the user by email
@@ -110,31 +110,28 @@ export const deleteCart = async (req, res) => {
 
     await user.save();
 
-    res.status(200).json({ success: true, message: "Cart item deleted successfully!" });
+    res
+      .status(200)
+      .json({ success: true, message: "Cart item deleted successfully!" });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
-
-// update Cart
 export const updateCart = async (req, res) => {
-  const { id: cartId } = req.params;
-  const { email, productId, name, images, price, quantity } = req.body;
+  const { id: cartId } = req.params; // Get cart item ID from request params
+  const { productId, name, images, material, price, quantity, email } = req.body; // Destructure request body
 
   try {
+    // Find and update the cart item inside the user's cart
     const user = await User.findOneAndUpdate(
-      { email, "cart._id": cartId },
+      { email, "cart._id": cartId }, // Match user by email and cart item ID
       {
         $set: {
-          "cart.$.productId": productId,
-          "cart.$.name": name,
-          "cart.$.images": images,
-          "cart.$.price": price,
-          "cart.$.quantity": quantity,
+          "cart.$": { productId, name, images, material, price, quantity },
         },
       },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true } // Return updated document and validate
     );
 
     if (!user) {
@@ -143,7 +140,7 @@ export const updateCart = async (req, res) => {
 
     res.status(200).json({
       message: "Cart item updated successfully!",
-      cart: user.cart,
+      cart: user.cart, // Return updated cart
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -190,4 +187,3 @@ export const getSingleCart = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
