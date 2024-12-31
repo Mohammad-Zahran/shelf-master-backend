@@ -10,6 +10,7 @@ const cartItemSchema = new Schema({
     minlength: 3,
   },
   images: [String], 
+  material: String,
   price: Number,
   quantity: Number,
 });

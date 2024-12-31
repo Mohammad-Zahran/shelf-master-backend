@@ -5,17 +5,23 @@ export const getCartByEmail = async (req, res) => {
   try {
     const email = req.query.email;
 
-    const query = { email: email };
-    const result = await User.find(query).exec();
-    res.status(200).json(result);
+    // Find the user by email and return only the cart field
+    const user = await User.findOne({ email: email }).select("cart").exec();
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found!" });
+    }
+
+    res.status(200).json({ cart: user.cart });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
+
 // Add to Cart
 export const addToCart = async (req, res) => {
-  const { email, productId, name, images, price, quantity } = req.body;
+  const { email, productId, name, images, material, price, quantity } = req.body;
 
   try {
     // Find the user by email
@@ -37,7 +43,7 @@ export const addToCart = async (req, res) => {
     }
 
     // Add the new product to the cart
-    user.cart.push({ productId, name, images, price, quantity });
+    user.cart.push({ productId, name, images, material, price, quantity });
 
     // Save the updated user document
     await user.save();

@@ -11,7 +11,7 @@ import {
 
 const router = new Router();
 
-router.get("/", verifyToken, getCartByEmail);
+router.get("/", getCartByEmail);
 router.post("/", addToCart);
 router.delete("/:id", deleteCart);
 router.put("/:id", updateCart);
