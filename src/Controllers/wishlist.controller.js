@@ -21,18 +21,22 @@ export const addWishlistItem = async (req, res) => {
 };
 
 // Get all wishlist items
-export const getWishListByEmail = async(req,res) => {
-    try {
-      const email = req.query.email;
-  
-      const query = {email: email};
-      const result = await User.find(query).exec();
-      res.status(200).json(result);
+export const getWishListByEmail = async (req, res) => {
+  try {
+    const email = req.query.email;
+
+    // Find the user by email and return only the cart field
+    const user = await User.findOne({ email: email }).select("wishlist").exec();
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found!" });
     }
-    catch (error) {
-      res.status(500).json({message: error.message});
-    }
+
+    res.status(200).json({ wishlist: user.wishlist });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
+};
 
 // Remove an item from the wishlist based on productId and wishlistId
 export const removeWishlistItem = async (req, res) => {
@@ -68,3 +72,32 @@ export const removeWishlistItem = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const toggleWishlistItem = async (req, res) => {
+  const { email, product } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const existingIndex = user.wishlist.findIndex(
+      (item) => item._id.toString() === product._id
+    );
+
+    if (existingIndex !== -1) {
+      user.wishlist.splice(existingIndex, 1); // Remove item
+      await user.save();
+      return res.status(200).json({ message: "Item removed from wishlist" });
+    }
+
+    user.wishlist.push(product); // Add item
+    await user.save();
+    res.status(200).json({ message: "Item added to wishlist" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
