@@ -23,7 +23,8 @@ cartItemSchema.virtual("firstImage").get(function () {
 const wishlistItemSchema = new Schema({
   productId: String,
   name: String,
-  image: String,
+  images: [String],
+  material: String,
   price: Number,
   addedAt: {
     type: Date,
