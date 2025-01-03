@@ -68,8 +68,7 @@ app.listen(process.env.SERVER_PORT, () => {
 //   },
 // });
 
-
-// 
+//
 // async function main() {
 //   // send mail with defined transport object
 //   const info = await transporter.sendMail({

@@ -13,7 +13,8 @@ import {
 const router = new Router();
 
 router.post("/", register);
-router.get("/", verifyToken, verifyAdmin, getAllUsers);
+// router.get("/", verifyToken, verifyAdmin, getAllUsers);
+router.get("/", getAllUsers);
 router.delete("/:id", verifyToken, verifyAdmin, deleteUser);
 router.get("/admin/:email", verifyToken, getAdmin);
 router.patch("/admin/:id", verifyToken, verifyAdmin, makeAdmin);

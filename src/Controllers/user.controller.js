@@ -4,17 +4,26 @@ import { User } from "../models/user.model.js";
 export const register = async (req, res) => {
   const user = req.body;
   const query = { email: user.email };
+  const defaultPhotoURL = "https://example.com/default-profile-pic.png"; // Replace with your default profile picture URL
+
   try {
     const existingUser = await User.findOne(query);
     if (existingUser) {
       return res.status(302).json({ message: "User already exists!" });
     }
+
+    // Add default photoURL if not provided
+    if (!user.photoURL) {
+      user.photoURL = defaultPhotoURL;
+    }
+
     const result = await User.create(user);
     res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 // get all users
 export const getAllUsers = async (req, res) => {
