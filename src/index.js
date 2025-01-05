@@ -42,19 +42,17 @@ app.use("/payments", paymentRoutes);
 app.use("/wishlists", wishlistRoutes);
 app.use("/testimonials", testimonialRoutes);
 
-
 // Stripe payment routes
 app.post("/create-payment-intent", async (req, res) => {
-  const { items } = req.body;
+  const { price } = req.body;
+  const amount = price * 100;
 
   // Create a PaymentIntent with the order amount and currency
   const paymentIntent = await stripe.paymentIntents.create({
-    amount: calculateOrderAmount(items),
+    amount: amount,
     currency: "usd",
-    // In the latest version of the API, specifying the `automatic_payment_methods` parameter is optional because Stripe enables its functionality by default.
-    automatic_payment_methods: {
-      enabled: true,
-    },
+
+    payment_method_types: ["card"],
   });
 
   res.send({
