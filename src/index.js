@@ -10,14 +10,14 @@ import categoryRoutes from "./routes/category.routes.js";
 import paymentRoutes from "./routes/payment.routes.js";
 import wishlistRoutes from "./routes/wishlist.routes.js";
 import testimonialRoutes from "./routes/testimonial.routes.js";
-
 import jwt from "jsonwebtoken";
-
 import nodemailer from "nodemailer";
+import Stripe from "stripe";
 
 const app = express();
 
 dotenv.config();
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 app.use(express.json());
 app.use(
@@ -41,6 +41,26 @@ app.use("/category", categoryRoutes);
 app.use("/payments", paymentRoutes);
 app.use("/wishlists", wishlistRoutes);
 app.use("/testimonials", testimonialRoutes);
+
+
+// Stripe payment routes
+app.post("/create-payment-intent", async (req, res) => {
+  const { items } = req.body;
+
+  // Create a PaymentIntent with the order amount and currency
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: calculateOrderAmount(items),
+    currency: "usd",
+    // In the latest version of the API, specifying the `automatic_payment_methods` parameter is optional because Stripe enables its functionality by default.
+    automatic_payment_methods: {
+      enabled: true,
+    },
+  });
+
+  res.send({
+    clientSecret: paymentIntent.client_secret,
+  });
+});
 
 app.get("/", (req, res) => {
   res.send("Hello Shelf Client Server!");
