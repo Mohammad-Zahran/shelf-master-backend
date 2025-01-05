@@ -1,5 +1,4 @@
 import { Router } from "express";
-
 import {
   addReview,
   getReviews,
@@ -8,14 +7,16 @@ import {
   getAverageRating,
   getReview,
 } from "../controllers/review.controller.js";
+import { verifyToken } from "../middleware/verifyToken.js";
 
 const router = new Router();
 
-router.post("/", addReview);
+// Secure the routes requiring authentication with verifyToken
+router.post("/products/:productId/reviews", verifyToken, addReview);
 router.get("/:id", getReviews);
 router.get("/:productId/:reviewId", getReview);
 router.get("/products/:id/average-rating", getAverageRating);
-router.patch("/:productId/:reviewId", updateReview);
-router.delete("/:productId/:reviewId", deleteReview);
+router.patch("/:productId/:reviewId", verifyToken, updateReview);
+router.delete("/:productId/:reviewId", verifyToken, deleteReview);
 
 export default router;

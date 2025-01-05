@@ -1,15 +1,21 @@
 import { Product } from "./../models/product.model.js";
 
-// Add a new review
 export const addReview = async (req, res) => {
   try {
-    const { productId, userId } = req.params; // Extract productId and userId from params
-    const { userName, rating, comment } = req.body; // Keep the rest of the data in the body
+    const { productId } = req.params;
+    const { rating, comment } = req.body;
 
-    if (!userName || !rating || !comment) {
+    if (!req.decoded) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const userId = req.decoded.id; // Extract userId from decoded token
+    const userName = req.decoded.name; // Extract userName from decoded token
+
+    if (!rating || !comment) {
       return res
         .status(400)
-        .json({ message: "All required fields must be provided!" });
+        .json({ message: "Rating and comment are required!" });
     }
 
     // Find the product by ID
