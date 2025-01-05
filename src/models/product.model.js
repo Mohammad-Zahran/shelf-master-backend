@@ -35,7 +35,6 @@ const productSchema = new Schema({
   },
   category: {
     type: String,
-    enum: ["Heavy-Duty", "Adjustable", "Wall-Mounted", "Freestanding"],
     required: true,
   },
   dimensions: {

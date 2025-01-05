@@ -3,22 +3,32 @@ import { Product } from "./../models/product.model.js";
 // Add a new review
 export const addReview = async (req, res) => {
   try {
-    const { productId, userId, userName, rating, comment } = req.body;
+    const { productId, userId } = req.params; // Extract productId and userId from params
+    const { userName, rating, comment } = req.body; // Keep the rest of the data in the body
 
-    if (!productId || !userId || !userName || !rating) {
+    if (!userName || !rating || !comment) {
       return res
         .status(400)
         .json({ message: "All required fields must be provided!" });
     }
 
+    // Find the product by ID
     const product = await Product.findById(productId);
 
     if (!product) {
       return res.status(404).json({ message: "Product not found!" });
     }
-    const newReview = { userId, userName, rating, comment };
+
+    // Create the new review
+    const newReview = {
+      userId,
+      userName,
+      rating: Number(rating), // Ensure rating is a number
+      comment,
+    };
     product.reviews.push(newReview);
 
+    // Save the product with the new review
     await product.save();
 
     res
@@ -121,20 +131,17 @@ export const deleteReview = async (req, res) => {
   }
 };
 
-// get Average Rating of a Product
-
+// Get Average Rating
 export const getAverageRating = async (req, res) => {
   try {
     const { id: productId } = req.params;
 
     const product = await Product.findById(productId);
-
     if (!product) {
       return res.status(404).json({ message: "Product not found!" });
     }
 
     const totalReviews = product.reviews.length;
-
     if (totalReviews === 0) {
       return res.status(200).json({ averageRating: 0 });
     }
