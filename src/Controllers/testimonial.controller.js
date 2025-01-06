@@ -1,8 +1,7 @@
 import { User } from "../models/user.model.js";
 
-// Add a testimonial
 export const addTestimonial = async (req, res) => {
-  const { email, testimonial } = req.body;
+  const { email, name, rating, comment } = req.body;
 
   try {
     const user = await User.findOne({ email });
@@ -11,10 +10,14 @@ export const addTestimonial = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    const testimonial = { name, rating, comment, createdAt: new Date() };
+
     user.testimonials.push(testimonial);
     await user.save();
 
-    res.status(200).json({ message: "Testimonial added successfully", user });
+    res
+      .status(200)
+      .json({ message: "Testimonial added successfully", testimonial });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -23,8 +26,16 @@ export const addTestimonial = async (req, res) => {
 // Get all testimonials across all users
 export const getAllTestimonials = async (req, res) => {
   try {
-    const users = await User.find({}, "testimonials");
-    const allTestimonials = users.map((user) => user.testimonials).flat();
+    const users = await User.find({}, "photoURL testimonials"); // Fetch only photoURL and testimonials
+
+    const allTestimonials = users
+      .map((user) =>
+        user.testimonials.map((testimonial) => ({
+          ...testimonial.toObject(), // Convert testimonial to plain object
+          photoURL: user.photoURL, // Include user's photoURL
+        }))
+      )
+      .flat();
 
     res.status(200).json(allTestimonials);
   } catch (error) {
