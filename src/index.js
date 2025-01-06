@@ -71,29 +71,43 @@ app.listen(process.env.SERVER_PORT, () => {
   console.log(`Server running on port ${process.env.SERVER_PORT}`);
 });
 
-// const transporter = nodemailer.createTransport({
-//   host: "smtp.gmail.com",
-//   port: 587, // Use 465 if you set `secure: true`
-//   secure: false, // true for port 465, false for port 587
-//   auth: {
-//     user: process.env.EMAIL_USER,
-//     pass: process.env.EMAIL_PASS,
-//   },
-// });
+// Create a Nodemailer transporter
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 587, // Use 465 if you set `secure: true`
+  secure: false, // true for port 465, false for port 587
+  auth: {
+    user: process.env.EMAIL_USER, // Your email
+    pass: process.env.EMAIL_PASS, // Your email password or app-specific password
+  },
+});
 
-//
-// async function main() {
-//   // send mail with defined transport object
-//   const info = await transporter.sendMail({
-//     from: '"Maddison Foo Koch 👻" <zahranmohammad30@gmail.com>', // sender address
-//     to: "mohammadalzahrann@gmail.com", // list of receivers
-//     subject: "Hello ✔", // Subject line
-//     text: "Hello world?", // plain text body
-//     html: "<b>Hello world?</b>", // html body
-//   });
+// POST route to send emails
+app.post("/send-email", async (req, res) => {
+  const { name, email, subject, message } = req.body;
 
-//   console.log("Message sent: %s", info.messageId);
-//   // Message sent: <d786aa62-4e0a-070a-47ed-0b0666549519@ethereal.email>
-// }
+  try {
+    // Send email
+    const info = await transporter.sendMail({
+      from: `"${name}" <${email}>`, // Sender's email
+      to: process.env.EMAIL_USER, // Receiver's email
+      subject: subject || "No Subject", // Subject
+      text: message || "No Message Provided", // Plain text
+      html: `<p>${message || "No Message Provided"}</p>`, // HTML version
+    });
 
-// main().catch(console.error);
+    console.log("Message sent: %s", info.messageId);
+
+    res.status(200).json({
+      success: true,
+      message: "Email sent successfully!",
+    });
+  } catch (error) {
+    console.error("Error sending email:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to send email.",
+      error: error.message,
+    });
+  }
+});
