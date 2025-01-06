@@ -1,7 +1,7 @@
 import { Payment } from "../models/payment.model.js";
 import { User } from "../models/user.model.js";
+import { Product } from "../models/product.model.js";
 
-// post payment to inform to db
 export const createPayment = async (req, res) => {
   const paymentData = req.body;
 
@@ -12,16 +12,51 @@ export const createPayment = async (req, res) => {
       return res.status(404).json({ message: "User not found." });
     }
 
+    // Process product items and update stock
+    for (const item of paymentData.productItems) {
+      console.log("Processing product item:", item);
+
+      // Find the product by ID
+      const product = await Product.findById(item.productId);
+      if (!product) {
+        console.error(`Product not found: ${item.productId}`);
+        return res.status(404).json({
+          message: `Product with ID ${item.productId} not found.`,
+        });
+      }
+
+      // Check if enough stock is available
+      if (product.stock < item.quantity) {
+        console.error(
+          `Insufficient stock for product: ${product.name} (ID: ${item.productId})`
+        );
+        return res.status(400).json({
+          message: `Insufficient stock for product: ${product.name}`,
+        });
+      }
+
+      // Update the stock
+      product.stock -= item.quantity;
+      console.log(
+        `Updated stock for product ${product.name}: ${product.stock}`
+      );
+      await product.save();
+    }
+
+    // Record the payment
     const newPayment = await Payment.create(paymentData);
 
+    // Clear the user's cart
     user.cart = [];
     await user.save();
 
     res.status(200).json({
-      message: "Payment recorded and cart cleared successfully.",
+      message:
+        "Payment recorded, cart cleared, and stock updated successfully.",
       payment: newPayment,
     });
   } catch (error) {
+    console.error("Error in createPayment:", error.message);
     res
       .status(500)
       .json({ message: "An error occurred.", error: error.message });

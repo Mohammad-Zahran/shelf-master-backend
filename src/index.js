@@ -42,7 +42,6 @@ app.use("/payments", paymentRoutes);
 app.use("/wishlists", wishlistRoutes);
 app.use("/testimonials", testimonialRoutes);
 
-// Stripe payment routes
 app.post("/create-payment-intent", async (req, res) => {
   const { price } = req.body;
   const amount = price * 100;
@@ -58,10 +57,6 @@ app.post("/create-payment-intent", async (req, res) => {
   res.send({
     clientSecret: paymentIntent.client_secret,
   });
-});
-
-app.get("/", (req, res) => {
-  res.send("Hello Shelf Client Server!");
 });
 
 app.post("/jwt", async (req, res) => {
