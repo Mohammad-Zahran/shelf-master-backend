@@ -14,38 +14,57 @@ router.get("/", async (req, res) => {
   try {
     const result = await Payment.aggregate([
       {
-        $unwind: "$productItems",
+        $unwind: "$productItems", // Deconstruct the productItems array
       },
       {
-        $lookup: {
-          from: "products",
-          localField: "productItems",
-          foreignField: "_id",
-          as: "productItemsDetails",
+        $addFields: {
+          productIdAsObjectId: {
+            $convert: {
+              input: "$productItems.productId", // Extract productId from the nested object
+              to: "objectId", // Convert it to ObjectId
+              onError: null, // Handle invalid conversions
+              onNull: null, // Handle null values
+            },
+          },
         },
       },
       {
-        $unwind: "$productItemsDetails",
+        $lookup: {
+          from: "products", // The products collection
+          localField: "productIdAsObjectId", // Match the converted productId
+          foreignField: "_id", // Match against the _id field in Product
+          as: "productDetails",
+        },
+      },
+      {
+        $unwind: {
+          path: "$productDetails", // Unwind the matched product details
+          preserveNullAndEmptyArrays: false, // Skip unmatched entries
+        },
       },
       {
         $group: {
-          _id: "$productItemsDetails.category",
-          quantity: { $sum: "$quantity" },
-          revenue: { $sum: "$price" },
+          _id: "$productDetails.category", // Group by product category
+          quantity: { $sum: "$productItems.quantity" }, // Sum quantities from productItems
+          revenue: {
+            $sum: {
+              $multiply: ["$productDetails.price", "$productItems.quantity"],
+            },
+          }, // Calculate revenue
         },
       },
       {
         $project: {
-          _id: 0,
-          category: "$_id",
-          quantity: "$quantity",
-          revenue: "$revenue",
+          _id: 0, // Exclude the default _id field
+          category: "$_id", // Rename the grouped category
+          quantity: 1, // Include quantity in the result
+          revenue: 1, // Include revenue in the result
         },
       },
     ]);
     res.json(result);
   } catch (error) {
-    res.statsu(500).send("Internal Server Error: " + error.message);
+    res.status(500).send("Internal Server Error: " + error.message);
   }
 });
 
