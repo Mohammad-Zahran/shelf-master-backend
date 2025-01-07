@@ -12,6 +12,7 @@ import wishlistRoutes from "./routes/wishlist.routes.js";
 import testimonialRoutes from "./routes/testimonial.routes.js";
 import adminStatsRoutes from "./routes/adminStats.routes.js";
 import orderStatsRoutes from "./routes/orderStats.routes.js";
+import mostOrderedProductRoutes from "./routes/mostOrderedProducts.routes.js";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import Stripe from "stripe";
@@ -45,6 +46,8 @@ app.use("/wishlists", wishlistRoutes);
 app.use("/testimonials", testimonialRoutes);
 app.use("/adminStats", adminStatsRoutes);
 app.use("/orderStats", orderStatsRoutes);
+app.use("/mostOrderedProducts", mostOrderedProductRoutes);
+
 
 app.post("/create-payment-intent", async (req, res) => {
   const { price } = req.body;
