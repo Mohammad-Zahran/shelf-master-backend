@@ -12,7 +12,7 @@ import { verifyToken } from "../middleware/verifyToken.js";
 const router = new Router();
 
 // Secure the routes requiring authentication with verifyToken
-router.post("/products/:productId/reviews", verifyToken, addReview);
+router.post("/:productId", addReview);
 router.get("/:id", getReviews);
 router.get("/:productId/:reviewId", getReview);
 router.get("/products/:id/average-rating", getAverageRating);

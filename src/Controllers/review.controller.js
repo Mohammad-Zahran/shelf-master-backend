@@ -1,35 +1,42 @@
 import { Product } from "./../models/product.model.js";
+import { User } from "./../models/user.model.js";
 
 export const addReview = async (req, res) => {
   try {
     const { productId } = req.params;
-    const { rating, comment } = req.body;
+    const { email, rating, comment } = req.body;
 
-    if (!req.decoded) {
-      return res.status(401).json({ message: "Unauthorized" });
+    // Validate inputs
+    if (!email || !rating || !comment) {
+      return res.status(400).json({ message: "Email, rating, and comment are required!" });
+    }
+    if (rating < 1 || rating > 5) {
+      return res.status(400).json({ message: "Rating must be between 1 and 5!" });
     }
 
-    const userId = req.decoded.id; // Extract userId from decoded token
-    const userName = req.decoded.name; // Extract userName from decoded token
-
-    if (!rating || !comment) {
-      return res
-        .status(400)
-        .json({ message: "Rating and comment are required!" });
+    // Find user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found!" });
     }
 
     // Find the product by ID
     const product = await Product.findById(productId);
-
     if (!product) {
       return res.status(404).json({ message: "Product not found!" });
     }
 
+    // Check if the user has already reviewed this product
+    const existingReview = product.reviews.find((review) => review.userId === user._id.toString());
+    if (existingReview) {
+      return res.status(400).json({ message: "You have already reviewed this product." });
+    }
+
     // Create the new review
     const newReview = {
-      userId,
-      userName,
-      rating: Number(rating), // Ensure rating is a number
+      userId: user._id,
+      userName: user.name,
+      rating: Number(rating),
       comment,
     };
     product.reviews.push(newReview);
@@ -37,13 +44,12 @@ export const addReview = async (req, res) => {
     // Save the product with the new review
     await product.save();
 
-    res
-      .status(201)
-      .json({ message: "Review added successfully!", review: newReview });
+    res.status(201).json({ message: "Review added successfully!", review: newReview });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 // Get All Reviews
 export const getReviews = async (req, res) => {
