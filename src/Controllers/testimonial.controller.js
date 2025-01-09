@@ -88,15 +88,17 @@ export const updateTestimonial = async (req, res) => {
 };
 
 export const deleteTestimonial = async (req, res) => {
-  const { email, testimonialId } = req.params;
+  const { testimonialId } = req.params;
 
   try {
-    const user = await User.findOne({ email });
+    // Find the user containing the testimonial
+    const user = await User.findOne({ "testimonials._id": testimonialId });
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "Testimonial not found" });
     }
 
+    // Find the index of the testimonial
     const testimonialIndex = user.testimonials.findIndex(
       (testimonial) => testimonial._id.toString() === testimonialId
     );
@@ -105,11 +107,13 @@ export const deleteTestimonial = async (req, res) => {
       return res.status(404).json({ message: "Testimonial not found" });
     }
 
+    // Remove the testimonial
     user.testimonials.splice(testimonialIndex, 1);
     await user.save();
 
-    res.status(200).json({ message: "Testimonial deleted successfully", user });
+    res.status(200).json({ message: "Testimonial deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+

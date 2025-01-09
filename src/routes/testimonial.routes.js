@@ -5,7 +5,7 @@ import {
   getAllTestimonials,
   updateTestimonial,
   deleteTestimonial,
-} from "../controllers/testimonial.controller.js";
+} from "../Controllers/testimonial.controller.js";
 
 const router = new Router();
 
@@ -13,6 +13,6 @@ router.post("/", addTestimonial);
 router.get("/", getTestimonials);
 router.get("/all", getAllTestimonials);
 router.put("/:email/:testimonialId", updateTestimonial);
-router.delete("/:email/:testimonialId", deleteTestimonial);
+router.delete("/:testimonialId", deleteTestimonial); // Updated to use only testimonialId
 
 export default router;
