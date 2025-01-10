@@ -1,6 +1,6 @@
 import OpenAI from "openai";
-
 import dotenv from "dotenv";
+import { Product } from "../models/product.model.js";
 
 dotenv.config({ path: "./.env" });
 
@@ -35,6 +35,12 @@ export const askAI = async (req, res) => {
     const aiResponse = completion.choices[0].message.content;
     res.status(200).json({ message: aiResponse });
   } catch (error) {
-    res.status(500).json({ message: "Error generating response from OpenAI", error: error.message });
+    res
+      .status(500)
+      .json({
+        message: "Error generating response from OpenAI",
+        error: error.message,
+      });
   }
 };
+
