@@ -16,6 +16,8 @@ import mostOrderedProductRoutes from "./routes/mostOrderedProducts.routes.js";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import Stripe from "stripe";
+import OpenAI from "openai";
+
 
 const app = express();
 
@@ -119,3 +121,5 @@ app.post("/send-email", async (req, res) => {
     });
   }
 });
+
+// Open AI Section
