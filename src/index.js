@@ -87,6 +87,23 @@ let conversationHistory = [
   { role: "system", content: "You are a helpful assistant" },
 ];
 
+app.post("/ask", async (req, res) => {
+  const userMessage = req.body.message;
+  // Update the conversation history with the user's message
+  conversationHistory.push({ role: "user", content: userMessage });
+  try {
+    const completion = await openai.chat.completions.create({
+      messages: conversationHistory,
+      model: "gpt-3.5-turbo",
+    });
+    // Extract the response
+    const bothResponse = completion.choices[0].message.content;
+    res.json({ message: bothResponse });
+    // Extract the response
+  } catch (error) {
+    res.status(500).send("Error generating response from OpenAI");
+  }
+});
 
 // Create a Nodemailer transporter
 const transporter = nodemailer.createTransport({
