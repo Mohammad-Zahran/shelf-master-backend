@@ -18,11 +18,13 @@ import nodemailer from "nodemailer";
 import Stripe from "stripe";
 import OpenAI from "openai";
 
-
 const app = express();
 
 dotenv.config();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 // Hello
 app.use(express.json());
@@ -50,7 +52,6 @@ app.use("/testimonials", testimonialRoutes);
 app.use("/adminStats", adminStatsRoutes);
 app.use("/orderStats", orderStatsRoutes);
 app.use("/mostOrderedProducts", mostOrderedProductRoutes);
-
 
 app.post("/create-payment-intent", async (req, res) => {
   const { price } = req.body;
@@ -80,6 +81,12 @@ app.post("/jwt", async (req, res) => {
 app.listen(process.env.SERVER_PORT, () => {
   console.log(`Server running on port ${process.env.SERVER_PORT}`);
 });
+
+// AI configuration
+let conversationHistory = [
+  { role: "system", content: "You are a helpful assistant" },
+];
+
 
 // Create a Nodemailer transporter
 const transporter = nodemailer.createTransport({
@@ -121,5 +128,3 @@ app.post("/send-email", async (req, res) => {
     });
   }
 });
-
-// Open AI Section
