@@ -16,15 +16,13 @@ import mostOrderedProductRoutes from "./routes/mostOrderedProducts.routes.js";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import Stripe from "stripe";
-import OpenAI from "openai";
+import aiRoutes from "./routes/ai.routes.js";
+
 
 const app = express();
 
 dotenv.config();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
 
 // Hello
 app.use(express.json());
@@ -52,6 +50,8 @@ app.use("/testimonials", testimonialRoutes);
 app.use("/adminStats", adminStatsRoutes);
 app.use("/orderStats", orderStatsRoutes);
 app.use("/mostOrderedProducts", mostOrderedProductRoutes);
+app.use("/ai",aiRoutes);
+
 
 app.post("/create-payment-intent", async (req, res) => {
   const { price } = req.body;
@@ -80,29 +80,6 @@ app.post("/jwt", async (req, res) => {
 
 app.listen(process.env.SERVER_PORT, () => {
   console.log(`Server running on port ${process.env.SERVER_PORT}`);
-});
-
-// AI configuration
-let conversationHistory = [
-  { role: "system", content: "You are a helpful assistant" },
-];
-
-app.post("/ask", async (req, res) => {
-  const userMessage = req.body.message;
-  // Update the conversation history with the user's message
-  conversationHistory.push({ role: "user", content: userMessage });
-  try {
-    const completion = await openai.chat.completions.create({
-      messages: conversationHistory,
-      model: "gpt-3.5-turbo",
-    });
-    // Extract the response
-    const bothResponse = completion.choices[0].message.content;
-    res.json({ message: bothResponse });
-    // Extract the response
-  } catch (error) {
-    res.status(500).send("Error generating response from OpenAI");
-  }
 });
 
 // Create a Nodemailer transporter
