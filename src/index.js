@@ -18,7 +18,6 @@ import nodemailer from "nodemailer";
 import Stripe from "stripe";
 import aiRoutes from "./routes/ai.routes.js";
 
-
 const app = express();
 
 dotenv.config();
@@ -50,8 +49,7 @@ app.use("/testimonials", testimonialRoutes);
 app.use("/adminStats", adminStatsRoutes);
 app.use("/orderStats", orderStatsRoutes);
 app.use("/mostOrderedProducts", mostOrderedProductRoutes);
-app.use("/ai",aiRoutes);
-
+app.use("/ai", aiRoutes);
 
 app.post("/create-payment-intent", async (req, res) => {
   const { price } = req.body;
