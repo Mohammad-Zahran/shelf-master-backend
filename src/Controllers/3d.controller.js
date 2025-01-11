@@ -44,7 +44,6 @@ export const getAllModels = async (req, res) => {
   }
 };
 
-
 export const deleteModel = async (req, res) => {
   try {
     const { id } = req.params;
@@ -66,5 +65,34 @@ export const deleteModel = async (req, res) => {
     res
       .status(500)
       .json({ message: "Error deleting model.", error: error.message });
+  }
+};
+
+export const updateModel = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, photo, model3D } = req.body;
+
+    if (!name || !photo || !model3D) {
+      return res.status(400).json({ message: "All fields are required." });
+    }
+
+    const updatedModel = await Model3D.findByIdAndUpdate(
+      id,
+      { name, photo, model3D },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedModel) {
+      return res.status(404).json({ message: "Model not found." });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Model updated successfully.", data: updatedModel });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error updating model.", error: error.message });
   }
 };
