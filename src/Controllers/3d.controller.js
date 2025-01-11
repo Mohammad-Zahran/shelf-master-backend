@@ -25,3 +25,21 @@ export const postModel = async (req, res) => {
       .json({ message: "Error creating 3D model.", error: error.message });
   }
 };
+
+export const getAllModels = async (req, res) => {
+  try {
+    const models = await Model3D.find();
+
+    if (!models || models.length === 0) {
+      return res.status(404).json({ message: "No models found." });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Models fetched successfully.", data: models });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error fetching models.", error: error.message });
+  }
+};
