@@ -6,4 +6,5 @@ const router = new Router();
 router.post("/", postModel);
 router.get("/",getAllModels);
 
+
 export default router;

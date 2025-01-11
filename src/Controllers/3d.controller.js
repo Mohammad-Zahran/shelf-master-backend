@@ -43,3 +43,28 @@ export const getAllModels = async (req, res) => {
       .json({ message: "Error fetching models.", error: error.message });
   }
 };
+
+
+export const deleteModel = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ message: "Model ID is required." });
+    }
+
+    const deletedModel = await Model3D.findByIdAndDelete(id);
+
+    if (!deletedModel) {
+      return res.status(404).json({ message: "Model not found." });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Model deleted successfully.", data: deletedModel });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error deleting model.", error: error.message });
+  }
+};
