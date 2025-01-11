@@ -1,4 +1,4 @@
-import { Model3D } from "../models/3d.model";
+import { Model3D } from "../models/3d.model.js";
 
 export const postModel = async (req, res) => {
   try {

@@ -13,10 +13,11 @@ import testimonialRoutes from "./routes/testimonial.routes.js";
 import adminStatsRoutes from "./routes/adminStats.routes.js";
 import orderStatsRoutes from "./routes/orderStats.routes.js";
 import mostOrderedProductRoutes from "./routes/mostOrderedProducts.routes.js";
+import aiRoutes from "./routes/ai.routes.js";
+import Model3DRoutes from "./routes/3d.routes.js";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import Stripe from "stripe";
-import aiRoutes from "./routes/ai.routes.js";
 
 const app = express();
 
@@ -50,6 +51,7 @@ app.use("/adminStats", adminStatsRoutes);
 app.use("/orderStats", orderStatsRoutes);
 app.use("/mostOrderedProducts", mostOrderedProductRoutes);
 app.use("/ai", aiRoutes);
+app.use("/3d", Model3DRoutes);
 
 app.post("/create-payment-intent", async (req, res) => {
   const { price } = req.body;

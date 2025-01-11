@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { postModel } from "../Controllers/3d.controller";
+import { postModel } from "../Controllers/3d.controller.js";
 
 const router = new Router();
 
