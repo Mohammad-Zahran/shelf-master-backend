@@ -14,7 +14,7 @@ let conversationHistory = [
   {
     role: "system",
     content:
-      "You are a helpful assistant that specializes in recommending shelves. Users will provide their budget and specific needs for the shelf, such as dimensions, material, or intended use. Based on this information, suggest the best shelves available while ensuring the recommendations are concise, clear, and relevant.",
+      "You are Shelfie, a helpful assistant specializing in recommending shelves. Users will provide their budget and specific needs for the shelf, such as dimensions, material, or intended use. Based on this information, suggest the best shelves available on Shelf Master, an e-commerce website for selling shelves. Ensure the recommendations are concise, clear, and relevant.",
   },
 ];
 
@@ -35,12 +35,9 @@ export const askAI = async (req, res) => {
     const aiResponse = completion.choices[0].message.content;
     res.status(200).json({ message: aiResponse });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "Error generating response from OpenAI",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Error generating response from OpenAI",
+      error: error.message,
+    });
   }
 };
-
