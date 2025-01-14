@@ -1,5 +1,6 @@
 import { Product } from "../models/product.model.js";
 import { Category } from "../models/category.model.js";
+import { Payment } from "../models/payment.model.js";
 
 // post a new product item
 export const postProductItem = async (req, res) => {
@@ -124,5 +125,36 @@ export const assignCategoryToProduct = async (req, res) => {
       .json({ message: "Category assigned to product successfully!", product });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+// Get popular products (based on number of reviews)
+export const getPopularProducts = async (req, res) => {
+  try {
+    const popularProducts = await Product.aggregate([
+      {
+        $project: {
+          name: 1,
+          price: 1,
+          images: 1,
+          reviewsCount: { $size: "$reviews" }, // Count number of reviews for each product
+        },
+      },
+      { $sort: { reviewsCount: -1 } }, // Sort by number of reviews in descending order
+      { $limit: 5 }, // Get the top 5 most reviewed products
+    ]);
+
+    // Check if popular products exist
+    if (!popularProducts.length) {
+      return res.status(404).json({ message: "No popular products found!" });
+    }
+
+    // Send the popular products as a response
+    res.status(200).json(popularProducts);
+  } catch (error) {
+    console.error("Error fetching popular products:", error.message); // Debugging log
+    res
+      .status(500)
+      .json({ message: "Error fetching popular products: " + error.message });
   }
 };
