@@ -90,16 +90,20 @@ export const makeAdmin = async (req, res) => {
   }
 }
 
-// update a user's profile
 export const updateProfile = async (req, res) => {
-  const userId = req.params.id;
-  const { name, photoURL } = req.body;
+  const { email, name, photoURL } = req.body;
 
   try {
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
+    // Validate request body
+    if (!email || !name || !photoURL) {
+      return res.status(400).json({ message: "Email, name, and photoURL are required!" });
+    }
+
+    // Find the user by email and update
+    const updatedUser = await User.findOneAndUpdate(
+      { email }, // Query by email
       { name, photoURL },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true } // Return updated user and validate inputs
     );
 
     if (!updatedUser) {
@@ -108,6 +112,7 @@ export const updateProfile = async (req, res) => {
 
     res.status(200).json({ message: "Profile updated successfully!", updatedUser });
   } catch (error) {
+    console.error("Error updating user:", error);
     res.status(500).json({ message: error.message });
   }
 };
