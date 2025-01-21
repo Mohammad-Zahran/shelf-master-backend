@@ -78,6 +78,10 @@ app.post("/jwt", async (req, res) => {
   res.send({ token });
 });
 
+app.get("/", (req,res) => {
+  return res.status(200).json({message: "Hello World"});
+})
+
 app.listen(process.env.SERVER_PORT, () => {
   console.log(`Server running on port ${process.env.SERVER_PORT}`);
 });
@@ -121,3 +125,4 @@ app.post("/send-email", async (req, res) => {
     });
   }
 });
+
