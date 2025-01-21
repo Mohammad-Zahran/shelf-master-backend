@@ -78,8 +78,6 @@ app.post("/jwt", async (req, res) => {
   res.send({ token });
 });
 
-
-
 app.listen(process.env.SERVER_PORT, () => {
   console.log(`Server running on port ${process.env.SERVER_PORT}`);
 });
