@@ -6,7 +6,7 @@ import {
   removeWishlistItem,
   toggleWishlistItem, // Import the toggleWishlistItem function
 
-} from "../controllers/wishlist.controller.js";
+} from "../Controllers/wishlist.controller.js";
 
 const router = new Router();
 

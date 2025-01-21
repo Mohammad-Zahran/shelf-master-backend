@@ -7,7 +7,7 @@ import {
   updateCart,
   getSingleCart,
   getCartByEmail,
-} from "./../controllers/cart.controller.js";
+} from "./../Controllers/cart.controller.js";
 
 const router = new Router();
 

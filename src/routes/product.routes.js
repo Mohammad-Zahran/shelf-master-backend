@@ -8,7 +8,7 @@ import {
   updateProductItem,
   assignCategoryToProduct,
   getPopularProducts,
-} from "../controllers/product.controller.js";
+} from "../Controllers/product.controller.js";
 
 const router = new Router();
 

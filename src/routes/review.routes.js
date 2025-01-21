@@ -6,7 +6,7 @@ import {
   deleteReview,
   getAverageRating,
   getReview,
-} from "../controllers/review.controller.js";
+} from "../Controllers/review.controller.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 
 const router = new Router();
