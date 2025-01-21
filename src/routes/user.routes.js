@@ -9,7 +9,7 @@ import {
   getAdmin,
   makeAdmin,
   updateProfile,
-} from "../controllers/user.controller.js";
+} from "../Controllers/user.controller.js";
 
 const router = new Router();
 
